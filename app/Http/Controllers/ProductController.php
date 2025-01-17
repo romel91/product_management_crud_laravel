@@ -17,8 +17,8 @@ class ProductController extends Controller
                   ->orWhere('price', 'like', '%' . $request->search . '%');
         }
 
-        if ($request->has('sort')) {
-            $query->orderBy($request->sort, $request->get('order', 'asc'));
+        if ($request->has('sort') && $request->has('direction')) {
+            $query->orderBy($request->input('sort'), $request->input('direction'));
         }
 
         $products = $query->paginate(10);
@@ -36,10 +36,20 @@ class ProductController extends Controller
             'product_id' => 'required|unique:products',
             'name' => 'required',
             'price' => 'required|numeric',
-            'image' => 'required|string',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Validate image
         ]);
-
-        Product::create($request->all());
+    
+        $imagePath = $request->file('image')->store('images', 'public'); // Store image in public storage
+    
+        Product::create([
+            'product_id' => $request->product_id,
+            'name' => $request->name,
+            'description' => $request->description,
+            'price' => $request->price,
+            'stock' => $request->stock,
+            'image' => $imagePath,
+        ]);
+    
         return redirect('/products')->with('success', 'Product created successfully.');
     }
 
@@ -56,17 +66,25 @@ class ProductController extends Controller
     }
 
     public function update(Request $request, $id)
-    {
-        $product = Product::findOrFail($id);
-        $request->validate([
-            'name' => 'required',
-            'price' => 'required|numeric',
-            'image' => 'required|string',
-        ]);
+{
+    $product = Product::findOrFail($id);
 
-        $product->update($request->all());
-        return redirect('/products')->with('success', 'Product updated successfully.');
+    $request->validate([
+        'name' => 'required',
+        'price' => 'required|numeric',
+        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+    ]);
+
+    if ($request->hasFile('image')) {
+        $imagePath = $request->file('image')->store('images', 'public');
+        $product->image = $imagePath;
     }
+
+    $product->update($request->except('image'));
+
+    return redirect('/products')->with('success', 'Product updated successfully.');
+}
+
 
     public function destroy($id)
     {
