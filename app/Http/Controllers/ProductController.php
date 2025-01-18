@@ -14,10 +14,8 @@ class ProductController extends Controller
             $search = $request->search;
     
             $query->where(function ($q) use ($search) {
-                $q->where('product_id', $search)
-                  ->orWhere('name', 'like', '%' . $search . '%')
-                  ->orWhere('description', 'like', '%' . $search . '%')
-                  ->orWhere('price', 'like', '%' . $search . '%');
+                $q->where('product_id', $search);
+                 
             });
         }
 
@@ -70,25 +68,26 @@ class ProductController extends Controller
     }
 
     public function update(Request $request, $id)
-{
-    $product = Product::findOrFail($id);
-
-    $request->validate([
-        'name' => 'required',
-        'price' => 'required|numeric',
-        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-    ]);
-
-    if ($request->hasFile('image')) {
-        $imagePath = $request->file('image')->store('images', 'public');
-        $product->image = $imagePath;
+    {
+        $product = Product::findOrFail($id);
+    
+        $request->validate([
+            'name' => 'nullable|string',
+            'description' => 'nullable|string',
+            'price' => 'required|numeric',
+            'stock' => 'required|numeric',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+    
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('images', 'public');
+            $product->image = $imagePath;
+        }
+    
+        $product->update($request->except('image'));
+    
+        return redirect('/products')->with('success', 'Product updated successfully.');
     }
-
-    $product->update($request->except('image'));
-
-    return redirect('/products')->with('success', 'Product updated successfully.');
-}
-
 
     public function destroy($id)
     {
