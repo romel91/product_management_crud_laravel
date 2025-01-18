@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<table class="table-auto w-full text-left border-collapse border border-gray-400">
+<table class="table-auto w-full text-center border-collapse border border-gray-400">
     <thead>
         <tr>
             <th class="border border-blue-300 px-4 py-2">SL</th>
@@ -54,7 +54,7 @@
 </table>
 
 <!-- Pagination Links -->
-<div class="mt-4">
-    {{ $products->links() }}
+<div class="mt-4 text-center text-green-500">
+    {{ $products->links('pagination::tailwind') }}
 </div>
 @endsection
