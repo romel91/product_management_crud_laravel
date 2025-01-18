@@ -28,6 +28,8 @@
     </script>
 </head>
 <body class="bg-gray-50 font-montserrat">
+
+<!-- Header -->
 <header class="bg-primary text-textPrimary py-5">
     <div class="text-center">
         <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">
@@ -57,9 +59,13 @@
         </a>
     </nav>
 </header>
+
+<!-- Main -->
 <main class="p-5">
     @yield('content')
 </main>
+
+<!-- Footer -->
 <footer class="bg-gray-800 text-textPrimary py-3 mt-10">
     <p class="text-center text-sm">
         &copy; {{ date('Y') }} Product Management Crud By Habibur Rahman Romel | All Rights Reserved

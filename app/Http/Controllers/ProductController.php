@@ -11,10 +11,14 @@ class ProductController extends Controller
         $query = Product::query();
 
         if ($request->has('search')) {
-            $query->where('product_id', 'like', '%' . $request->search . '%')
-                  ->orWhere('name', 'like', '%' . $request->search . '%')
-                  ->orWhere('description', 'like', '%' . $request->search . '%')
-                  ->orWhere('price', 'like', '%' . $request->search . '%');
+            $search = $request->search;
+    
+            $query->where(function ($q) use ($search) {
+                $q->where('product_id', $search)
+                  ->orWhere('name', 'like', '%' . $search . '%')
+                  ->orWhere('description', 'like', '%' . $search . '%')
+                  ->orWhere('price', 'like', '%' . $search . '%');
+            });
         }
 
         if ($request->has('sort') && $request->has('direction')) {
@@ -36,10 +40,10 @@ class ProductController extends Controller
             'product_id' => 'required|unique:products',
             'name' => 'required',
             'price' => 'required|numeric',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Validate image
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', 
         ]);
     
-        $imagePath = $request->file('image')->store('images', 'public'); // Store image in public storage
+        $imagePath = $request->file('image')->store('images', 'public'); 
     
         Product::create([
             'product_id' => $request->product_id,
