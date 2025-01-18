@@ -27,7 +27,7 @@
         }
     </script>
 </head>
-<body class="bg-gray-50 font-montserrat">
+<body class="bg-gray-50 min-h-screen font-montserrat flex flex-col">
 
 <!-- Header -->
 <header class="bg-primary text-textPrimary py-5">
@@ -61,15 +61,16 @@
 </header>
 
 <!-- Main -->
-<main class="p-5">
+<main class="flex-grow p-5">
     @yield('content')
 </main>
 
 <!-- Footer -->
-<footer class="bg-gray-800 text-textPrimary py-3 mt-10">
+<footer class="bg-gray-800 text-textPrimary py-3">
     <p class="text-center text-sm">
-        &copy; {{ date('Y') }} Product Management Crud By Habibur Rahman Romel | All Rights Reserved
+        &copy; {{ date('Y') }} Product Management CRUD by Habibur Rahman Romel | All Rights Reserved
     </p>
 </footer>
+
 </body>
 </html>
